@@ -1,16 +1,19 @@
 
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { 
-  Calendar, 
+  BarChart, 
+  Calendar,
   Headphones, 
   Home, 
+  MessageSquare,
   Mic, 
   Phone, 
   Search, 
+  Settings,
   User, 
   Users, 
-  BarChart, 
-  Settings
+  Video
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -22,24 +25,31 @@ interface SidebarProps {
 interface NavItem {
   name: string;
   icon: React.ElementType;
-  isActive?: boolean;
+  path: string;
 }
 
 const mainNavItems: NavItem[] = [
-  { name: 'Dashboard', icon: Home, isActive: true },
-  { name: 'Calls', icon: Phone },
-  { name: 'Voice Clone', icon: Mic },
-  { name: 'Customers', icon: Users },
-  { name: 'Calendar', icon: Calendar },
-  { name: 'Analytics', icon: BarChart }
+  { name: 'Dashboard', icon: Home, path: '/' },
+  { name: 'Analytics', icon: BarChart, path: '/analytics' },
+  { name: 'Voice & Video', icon: Mic, path: '/voice-clone' },
+  { name: 'Calls', icon: Phone, path: '/calls' },
+  { name: 'Customers', icon: Users, path: '/customers' },
+  { name: 'Chat', icon: MessageSquare, path: '/chat' },
+  { name: 'Calendar', icon: Calendar, path: '/calendar' },
 ];
 
 const secondaryNavItems: NavItem[] = [
-  { name: 'Settings', icon: Settings },
-  { name: 'Help', icon: Headphones }
+  { name: 'Settings', icon: Settings, path: '/settings' },
+  { name: 'Help', icon: Headphones, path: '/help' }
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+  const location = useLocation();
+  
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+  
   return (
     <aside 
       className={cn(
@@ -54,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         </div>
         <div className="flex flex-col">
           <span className="text-sm font-medium">SalesAI</span>
-          <span className="text-xs text-sidebar-foreground/60">Sales Individual</span>
+          <span className="text-xs text-sidebar-foreground/60">Sales Platform</span>
         </div>
       </div>
       
@@ -67,13 +77,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               size="sm"
               className={cn(
                 "w-full justify-start gap-2 font-normal",
-                item.isActive ? 
+                isActive(item.path) ? 
                   "bg-sidebar-accent text-sidebar-accent-foreground" : 
                   "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
               )}
+              asChild
             >
-              <item.icon size={18} />
-              {item.name}
+              <Link to={item.path}>
+                <item.icon size={18} />
+                {item.name}
+              </Link>
             </Button>
           ))}
         </div>
@@ -88,26 +101,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 size="sm"
                 className={cn(
                   "w-full justify-start gap-2 font-normal",
-                  item.isActive ? 
+                  isActive(item.path) ? 
                     "bg-sidebar-accent text-sidebar-accent-foreground" : 
                     "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
                 )}
+                asChild
               >
-                <item.icon size={18} />
-                {item.name}
+                <Link to={item.path}>
+                  <item.icon size={18} />
+                  {item.name}
+                </Link>
               </Button>
             ))}
           </div>
         </div>
         
-        <div className="mt-auto border-t border-sidebar-border pt-4">
-          <div className="glass-panel rounded-lg p-3 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-accent text-sidebar-accent-foreground">
-              <User size={16} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium">John Doe</span>
-              <span className="text-xs text-sidebar-foreground/60">Sales Rep</span>
+        <div className="mt-auto space-y-3">
+          <div className="px-2">
+            <Search className="h-4 w-4 text-sidebar-foreground/60" />
+            <span className="ml-2 text-xs text-sidebar-foreground/60">Press Ctrl+K to search</span>
+          </div>
+          
+          <div className="border-t border-sidebar-border pt-4">
+            <div className="glass-panel rounded-lg p-3 flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-accent text-sidebar-accent-foreground">
+                <User size={16} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">John Doe</span>
+                <span className="text-xs text-sidebar-foreground/60">Sales Rep</span>
+              </div>
             </div>
           </div>
         </div>
