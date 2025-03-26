@@ -10,6 +10,7 @@ import {
 
 export function Toaster() {
   const { toasts } = useToast()
+   const limitedToasts = toasts.slice(-1)
 
   return (
     <ToastProvider>
