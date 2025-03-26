@@ -88,7 +88,7 @@ const Index = () => {
 
   useEffect(() => {
     const today = new Date();
-    let startDate = new Date();
+    const startDate = new Date();
 
     switch (timeframe) {
       case '7d':
