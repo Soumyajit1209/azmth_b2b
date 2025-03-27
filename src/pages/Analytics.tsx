@@ -1,38 +1,60 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { DashboardCard } from '@/components/ui/DashboardCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { CalendarDays, Clock, Phone, User, Users, TrendingUp, TrendingDown, MessageSquare } from 'lucide-react';
-
-const salesData = [
-  { name: 'Jan', calls: 65, conversions: 12, amount: 4500 },
-  { name: 'Feb', calls: 59, conversions: 10, amount: 3800 },
-  { name: 'Mar', calls: 80, conversions: 18, amount: 6700 },
-  { name: 'Apr', calls: 81, conversions: 20, amount: 7800 },
-  { name: 'May', calls: 56, conversions: 15, amount: 5400 },
-  { name: 'Jun', calls: 55, conversions: 13, amount: 4900 },
-  { name: 'Jul', calls: 72, conversions: 19, amount: 7200 },
-];
-
-const performanceData = [
-  { name: 'Mon', aiCalls: 22, humanCalls: 18 },
-  { name: 'Tue', aiCalls: 25, humanCalls: 15 },
-  { name: 'Wed', aiCalls: 30, humanCalls: 10 },
-  { name: 'Thu', aiCalls: 28, humanCalls: 12 },
-  { name: 'Fri', aiCalls: 26, humanCalls: 14 },
-];
-
-const conversionRateData = [
-  { name: 'Cold Calls', value: 35 },
-  { name: 'Warm Leads', value: 55 },
-  { name: 'Referrals', value: 85 },
-];
+import { Phone, Users, TrendingUp, MessageSquare } from 'lucide-react';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
 const Analytics = () => {
+  // State to hold API data
+  const [salesData, setSalesData] = useState([]);
+  const [performanceData, setPerformanceData] = useState([]);
+  const [conversionRateData, setConversionRateData] = useState([]);
+  const [customerEngagementData, setCustomerEngagementData] = useState([]);
+  const [customerSentimentData, setCustomerSentimentData] = useState([]);
+
+  // Fetch Sales Performance Data
+  useEffect(() => {
+    fetch('/analytics/sales-performance')
+      .then((res) => res.json())
+      .then((data) => setSalesData(data))
+      .catch((error) => console.error('Error fetching sales performance data:', error));
+  }, []);
+
+  // Fetch AI vs Human Performance Data
+  useEffect(() => {
+    fetch('/analytics/performance')
+      .then((res) => res.json())
+      .then((data) => setPerformanceData(data))
+      .catch((error) => console.error('Error fetching performance data:', error));
+  }, []);
+
+  // Fetch Conversion Rate Data
+  useEffect(() => {
+    fetch('/analytics/conversion-rate')
+      .then((res) => res.json())
+      .then((data) => setConversionRateData(data))
+      .catch((error) => console.error('Error fetching conversion rate data:', error));
+  }, []);
+
+  // Fetch Customer Engagement Data
+  useEffect(() => {
+    fetch('/analytics/customer-engagement')
+      .then((res) => res.json())
+      .then((data) => setCustomerEngagementData(data))
+      .catch((error) => console.error('Error fetching customer engagement data:', error));
+  }, []);
+
+  // Fetch Customer Sentiment Data
+  useEffect(() => {
+    fetch('/analytics/customer-sentiment')
+      .then((res) => res.json())
+      .then((data) => setCustomerSentimentData(data))
+      .catch((error) => console.error('Error fetching customer sentiment data:', error));
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="space-y-6 py-4">
@@ -43,6 +65,7 @@ const Analytics = () => {
           </p>
         </div>
         
+        {/* Dashboard Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <DashboardCard className="bg-primary/10 border-none">
             <div className="flex items-center justify-between">
@@ -112,6 +135,7 @@ const Analytics = () => {
             <TabsTrigger value="customers">Customer Insights</TabsTrigger>
           </TabsList>
           
+          {/* Overview Tab */}
           <TabsContent value="overview" className="mt-6 space-y-6">
             <DashboardCard className="bg-card/50 border-none p-4">
               <h3 className="text-xl font-semibold mb-4">Sales Performance</h3>
@@ -185,10 +209,12 @@ const Analytics = () => {
             </div>
           </TabsContent>
           
+          {/* AI Performance Tab */}
           <TabsContent value="performance" className="mt-6 space-y-6">
             <DashboardCard className="bg-card/50 border-none p-4">
               <h3 className="text-xl font-semibold mb-4">AI vs Human Performance</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {/* Hardcoded performance details */}
                 <div className="bg-green-900/20 p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-medium">AI Performance</h4>
@@ -238,13 +264,16 @@ const Analytics = () => {
               
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={[
-                    { week: 'W1', human: 18, ai: 22, aiAssisted: 25 },
-                    { week: 'W2', human: 17, ai: 24, aiAssisted: 27 },
-                    { week: 'W3', human: 19, ai: 26, aiAssisted: 29 },
-                    { week: 'W4', human: 16, ai: 28, aiAssisted: 31 },
-                    { week: 'W5', human: 18, ai: 29, aiAssisted: 33 },
-                  ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <LineChart 
+                    data={[
+                      { week: 'W1', human: 18, ai: 22, aiAssisted: 25 },
+                      { week: 'W2', human: 17, ai: 24, aiAssisted: 27 },
+                      { week: 'W3', human: 19, ai: 26, aiAssisted: 29 },
+                      { week: 'W4', human: 16, ai: 28, aiAssisted: 31 },
+                      { week: 'W5', human: 18, ai: 29, aiAssisted: 33 },
+                    ]}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                     <XAxis dataKey="week" stroke="#888" />
                     <YAxis stroke="#888" />
@@ -262,19 +291,14 @@ const Analytics = () => {
             </DashboardCard>
           </TabsContent>
           
+          {/* Customer Insights Tab */}
           <TabsContent value="customers" className="mt-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <DashboardCard className="bg-card/50 border-none p-4">
                 <h3 className="text-xl font-semibold mb-4">Customer Engagement</h3>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={[
-                      { name: 'Email', count: 145 },
-                      { name: 'Phone', count: 287 },
-                      { name: 'Chat', count: 203 },
-                      { name: 'WhatsApp', count: 176 },
-                      { name: 'Video', count: 98 },
-                    ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <BarChart data={customerEngagementData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                       <XAxis dataKey="name" stroke="#888" />
                       <YAxis stroke="#888" />
@@ -293,14 +317,7 @@ const Analytics = () => {
                 <h3 className="text-xl font-semibold mb-4">Customer Sentiment</h3>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={[
-                      { date: 'Jan', positive: 65, neutral: 28, negative: 7 },
-                      { date: 'Feb', positive: 68, neutral: 27, negative: 5 },
-                      { date: 'Mar', positive: 70, neutral: 25, negative: 5 },
-                      { date: 'Apr', positive: 72, neutral: 23, negative: 5 },
-                      { date: 'May', positive: 75, neutral: 20, negative: 5 },
-                      { date: 'Jun', positive: 78, neutral: 18, negative: 4 },
-                    ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <LineChart data={customerSentimentData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                       <XAxis dataKey="date" stroke="#888" />
                       <YAxis stroke="#888" />
@@ -318,6 +335,7 @@ const Analytics = () => {
               </DashboardCard>
             </div>
             
+            {/* Top Performing Segments table remains hardcoded */}
             <DashboardCard className="bg-card/50 border-none p-4">
               <h3 className="text-xl font-semibold mb-4">Top Performing Segments</h3>
               <div className="overflow-x-auto">

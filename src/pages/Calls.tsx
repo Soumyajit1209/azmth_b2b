@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { DashboardCard } from '@/components/ui/DashboardCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,24 +12,87 @@ const Calls = () => {
   const [isAIMode, setIsAIMode] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
   const [callDuration, setCallDuration] = useState(0);
-  
-  const toggleCall = () => {
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
+
+  const toggleCall = async () => {
     if (!isCallActive) {
       setIsCallActive(true);
       setCallDuration(0);
-      
+
+      // Start local media stream
+      const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      localStreamRef.current = localStream;
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = localStream;
+      }
+
+      // Create peer connection
+      const peerConnection = new RTCPeerConnection();
+      peerConnectionRef.current = peerConnection;
+
+      // Add local stream tracks to peer connection
+      localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+
+      // Handle remote stream
+      peerConnection.ontrack = (event) => {
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = event.streams[0];
+        }
+      };
+
+      // Simulate signaling (replace with actual signaling logic)
+      peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+          console.log('Send ICE candidate to remote peer:', event.candidate);
+        }
+      };
+
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+      console.log('Send offer to remote peer:', offer);
+
+      // Simulate receiving an answer (replace with actual signaling logic)
+      setTimeout(async () => {
+        const answer = { type: 'answer', sdp: '...' }; // Replace with actual SDP
+        await peerConnection.setRemoteDescription(answer);
+      }, 1000);
+
       // Simulate call progress
       const interval = setInterval(() => {
-        setCallDuration(prev => prev + 1);
+        setCallDuration((prev) => prev + 1);
       }, 1000);
-      
+
       // Store interval ID to clean up later
       return () => clearInterval(interval);
     } else {
-      setIsCallActive(false);
+      endCall();
     }
   };
-  
+
+  const endCall = () => {
+    setIsCallActive(false);
+
+    // Stop local stream
+    localStreamRef.current?.getTracks().forEach((track) => track.stop());
+    localStreamRef.current = null;
+
+    // Close peer connection
+    peerConnectionRef.current?.close();
+    peerConnectionRef.current = null;
+
+    if (localVideoRef.current) localVideoRef.current.srcObject = null;
+    if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+  };
+
+  useEffect(() => {
+    return () => {
+      endCall(); // Clean up on component unmount
+    };
+  }, []);
+
   const toggleAI = () => {
     setIsAIMode(!isAIMode);
   };
@@ -104,18 +166,7 @@ const Calls = () => {
                       <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
                         <div className="col-span-1 bg-background/50 rounded-lg p-4 flex flex-col items-center">
                           <div className="relative mb-4">
-                            {customerDetails ? (
-                              <img 
-                                src={customerDetails.photo} 
-                                alt={customerDetails.name} 
-                                className="h-20 w-20 rounded-full"
-                              />
-                            ) : (
-                              <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center">
-                                <User className="h-8 w-8 text-muted-foreground" />
-                              </div>
-                            )}
-                            
+                            <video ref={localVideoRef} autoPlay muted className="h-20 w-20 rounded-full bg-muted" />
                             {isCallActive && (
                               <span className="absolute -bottom-1 -right-1 bg-green-500 h-5 w-5 rounded-full border-2 border-background"></span>
                             )}
@@ -151,6 +202,9 @@ const Calls = () => {
                         </div>
                         
                         <div className="col-span-2 bg-background/50 rounded-lg p-4 flex flex-col">
+                          <div className="relative mb-4">
+                            <video ref={remoteVideoRef} autoPlay className="w-full rounded-lg bg-muted" />
+                          </div>
                           <div className="flex justify-between items-center mb-4">
                             <h4 className="font-medium">Call Assistant</h4>
                             <div className="flex items-center">
