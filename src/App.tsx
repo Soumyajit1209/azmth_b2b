@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 // Pages
 import Index from "./pages/Index";
@@ -38,7 +38,6 @@ const App = () => (
               <SignInButton />
             </SignedOut>
             <SignedIn>
-              <UserButton />
             </SignedIn>
           </header>
           <Routes>
