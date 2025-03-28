@@ -54,10 +54,24 @@ const Calls = () => {
       await peerConnection.setLocalDescription(offer);
       console.log('Send offer to remote peer:', offer);
 
-      // Simulate receiving an answer (replace with actual signaling logic)
+      // Simulate receiving a remote offer (replace this with actual signaling logic)
       setTimeout(async () => {
-        const answer = { type: 'answer', sdp: '...' }; // Replace with actual SDP
-        await peerConnection.setRemoteDescription(answer);
+        const remoteOffer = {
+          type: 'offer',
+          sdp: 'v=0\r\n...' // Replace with a valid SDP offer from the remote peer
+        };
+
+        // Set the remote offer
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(remoteOffer));
+        console.log('Remote offer set:', remoteOffer);
+
+        // Create and set the local answer
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        console.log('Generated Answer SDP:', answer.sdp);
+
+        // Send the answer back to the remote peer (replace with actual signaling logic)
+        console.log('Send answer to remote peer:', answer);
       }, 1000);
 
       // Simulate call progress
