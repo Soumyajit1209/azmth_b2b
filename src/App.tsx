@@ -13,6 +13,7 @@ import Calls from "./pages/Calls";
 import Customers from "./pages/Customers";
 import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
+import  PdfUploadPage  from "./pages/PdfUploadPage";
 import { Button } from "./components/ui/button";
 
 // Create a client
@@ -47,6 +48,9 @@ const App = () => (
             <Route path="/calls" element={<Calls />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/upload-pdf" element={<PdfUploadPage />} />
+            {/* ADD ALL CUSTOM ROUTES BELOW THE CATCH-ALL "*" ROUTE */}
+            {/* Example: <Route path="/example" element={<Example />} /> */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

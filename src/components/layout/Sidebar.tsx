@@ -10,6 +10,7 @@ import {
   Phone, 
   Search, 
   Settings,
+  Upload,
   User, 
   Users, 
   Video
@@ -35,6 +36,7 @@ const mainNavItems: NavItem[] = [
   { name: 'Customers', icon: Users, path: '/customers' },
   { name: 'Chat', icon: MessageSquare, path: '/chat' },
   { name: 'Calendar', icon: Calendar, path: '/calendar' },
+  {name: 'Upload PDF', icon: Upload, path: '/upload-pdf'},
 ];
 
 const secondaryNavItems: NavItem[] = [
@@ -129,17 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 <span className="ml-2 text-xs text-sidebar-foreground/60">Press Ctrl+K to search</span>
               </div>
               
-              <div className="border-t border-sidebar-border pt-4">
-                <div className="glass-panel rounded-lg p-3 flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-accent text-sidebar-accent-foreground">
-                    <User size={16} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">John Doe</span>
-                    <span className="text-xs text-sidebar-foreground/60">Sales Rep</span>
-                  </div>
-                </div>
-              </div>
+             
             </>
           )}
         </div>
