@@ -13,6 +13,7 @@ import Calls from "./pages/Calls";
 import Customers from "./pages/Customers";
 import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
+import { Button } from "./components/ui/button";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -23,24 +24,34 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <header>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </header>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/voice-clone" element={<VoiceClone />} />
-          <Route path="/calls" element={<Calls />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/calendar" element={<Calendar />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <SignedOut>
+          {/* Render Clerk's SignIn/SignUp form */}
+          <div className="flex items-center justify-center h-screen">
+            <SignInButton mode="modal">
+              <Button>Sign In / Sign Up</Button>
+            </SignInButton>
+          </div>
+        </SignedOut>
+        <SignedIn>
+          <header>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/voice-clone" element={<VoiceClone />} />
+            <Route path="/calls" element={<Calls />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/calendar" element={<Calendar />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SignedIn>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
