@@ -479,7 +479,7 @@ const Customers = () => {
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="+1 (555) 123-4567" 
+                          placeholder="" 
                           {...field} 
                         />
                       </FormControl>

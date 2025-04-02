@@ -6,21 +6,30 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { BadgeCheck, Phone, PhoneCall, PhoneOff, User, Users, Mic, MicOff, MessageSquare, Clock, Bot, Wand2 } from 'lucide-react';
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber';
+import { Volume2, Edit, Download, Layers } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 
 const Calls = () => {
   const [isCallActive, setIsCallActive] = useState(false);
   const [isAIMode, setIsAIMode] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
   const [callDuration, setCallDuration] = useState(0);
+  const [dialNumber, setDialNumber] = useState('');
+  const [outgoingLine, setOutgoingLine] = useState('');
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
 
-  const toggleCall = async () => {
+  const toggleCall = async (targetNumber = '', fromNumber = '') => {
     if (!isCallActive) {
       setIsCallActive(true);
       setCallDuration(0);
+
+      // Set dial info if provided
+      if (targetNumber) setDialNumber(targetNumber);
+      if (fromNumber) setOutgoingLine(fromNumber);
 
       // Start local media stream
       const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -126,6 +135,90 @@ const Calls = () => {
   };
   
   const customerDetails = customers.find(c => c.id === selectedCustomer);
+
+  // Call Dialer Component
+  const CallDialer = () => {
+    const [selectedNumber, setSelectedNumber] = useState('');
+    const [inputNumber, setInputNumber] = useState('');
+    
+    const outgoingNumbers = [
+      { id: '1', label: 'Office Line', number: '+1 (555) 123-4567' },
+      { id: '2', label: 'Mobile', number: '+1 (555) 987-6543' },
+      { id: '3', label: 'Sales Line', number: '+1 (555) 456-7890' },
+    ];
+
+    const handleCall = () => {
+      if (inputNumber.trim()) {
+        toggleCall(inputNumber, selectedNumber);
+      }
+    };
+
+    return (
+      <div className="bg-background/50 rounded-lg p-4">
+        <h4 className="font-medium text-sm mb-3">Call Dialer</h4>
+        
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1">Outgoing Line</label>
+            <select 
+              className="w-full p-2 rounded-md border border-border bg-background"
+              value={selectedNumber}
+              onChange={(e) => setSelectedNumber(e.target.value)}
+            >
+              <option value="">Select outgoing number</option>
+              {outgoingNumbers.map(line => (
+                <option key={line.id} value={line.number}>
+                  {line.label} ({line.number})
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1">Dial Number</label>
+            <div className="flex gap-2">
+              <input
+                type="tel"
+                className="flex-1 p-2 rounded-md border border-border bg-background"
+                placeholder="Enter phone number"
+                value={inputNumber}
+                onChange={(e) => setInputNumber(e.target.value)}
+              />
+              <Button 
+                onClick={handleCall}
+                disabled={!selectedNumber || !inputNumber.trim()}
+                className="gap-1"
+              >
+                <PhoneCall className="h-4 w-4" />
+                <span>Call</span>
+              </Button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, '*', 0, '#'].map((digit) => (
+              <Button
+                key={digit}
+                variant="outline"
+                className="h-12 w-full"
+                onClick={() => setInputNumber(prev => prev + digit)}
+              >
+                {digit}
+              </Button>
+            ))}
+          </div>
+          
+          <Button 
+            variant="ghost" 
+            className="w-full"
+            onClick={() => setInputNumber('')}
+          >
+            Clear
+          </Button>
+        </div>
+      </div>
+    );
+  };
   
   return (
     <DashboardLayout>
@@ -168,9 +261,9 @@ const Calls = () => {
                           <Phone className="h-12 w-12 text-muted-foreground mb-4" />
                           <h4 className="text-lg font-medium mb-2">No Active Call</h4>
                           <p className="text-muted-foreground text-sm mb-6">
-                            Select a customer from the list to initiate a call, or use the quick call button below.
+                            Select a customer from the list to initiate a call, use the call dialer, or click the quick call button below.
                           </p>
-                          <Button onClick={toggleCall} className="gap-2">
+                          <Button onClick={() => toggleCall()} className="gap-2">
                             <PhoneCall className="h-4 w-4" />
                             Start New Call
                           </Button>
@@ -187,10 +280,10 @@ const Calls = () => {
                           </div>
                           
                           <h4 className="text-lg font-medium text-center">
-                            {customerDetails ? customerDetails.name : 'Unknown Customer'}
+                            {customerDetails ? customerDetails.name : (dialNumber ? dialNumber : 'Unknown Customer')}
                           </h4>
                           <p className="text-sm text-muted-foreground text-center mb-4">
-                            {customerDetails ? customerDetails.company : 'No company'}
+                            {customerDetails ? customerDetails.company : (outgoingLine ? `Via: ${outgoingLine}` : 'No company')}
                           </p>
                           
                           {isCallActive && (
@@ -202,12 +295,12 @@ const Calls = () => {
                           
                           <div className="flex gap-2 mt-auto">
                             {isCallActive ? (
-                              <Button variant="destructive" onClick={toggleCall} className="gap-2">
+                              <Button variant="destructive" onClick={endCall} className="gap-2">
                                 <PhoneOff className="h-4 w-4" />
                                 End Call
                               </Button>
                             ) : (
-                              <Button onClick={toggleCall} className="gap-2">
+                              <Button onClick={() => toggleCall()} className="gap-2">
                                 <PhoneCall className="h-4 w-4" />
                                 Start Call
                               </Button>
@@ -517,95 +610,161 @@ const Calls = () => {
                       <p className="font-medium text-sm truncate">{customer.name}</p>
                       <p className="text-xs text-muted-foreground truncate">{customer.company}</p>
                     </div>
-                    <div className={`h-2 w-2 rounded-full ${
-                      customer.status === 'Active' ? 'bg-green-400' : 
-                      customer.status === 'Pending' ? 'bg-yellow-400' : 'bg-gray-400'
-                    }`}></div>
+                    <div className={`h-2 w-2 rounded-full ${customer.status === 'Active' ? 'bg-green-500' : 
+      customer.status === 'Pending' ? 'bg-yellow-500' : 'bg-red-500'
+    }`}></div>
                   </button>
                 ))}
               </div>
             </DashboardCard>
             
-            {selectedCustomer && (
+            <CallDialer />
+            
+            <DashboardCard className="bg-card/50 border-none">
+              <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => toggleAI()}>
+                  {isAIMode ? (
+                    <>
+                      <User className="h-4 w-4" />
+                      <span>Switch to Human Mode</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bot className="h-4 w-4" />
+                      <span>Switch to AI Mode</span>
+                    </>
+                  )}
+                </Button>
+                
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  <span>Send Follow-up Email</span>
+                </Button>
+                
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <Clock className="h-4 w-4" />
+                  <span>Schedule Call</span>
+                </Button>
+              </div>
+            </DashboardCard>
+            
+            {isCallActive && (
               <DashboardCard className="bg-card/50 border-none">
-                <h3 className="text-lg font-semibold mb-4">Customer Details</h3>
-                <div className="space-y-4">
-                  <div className="flex flex-col items-center">
-                    <img 
-                      src={customerDetails?.photo}
-                      alt={customerDetails?.name}
-                      className="h-16 w-16 rounded-full mb-2"
-                    />
-                    <h4 className="font-medium">{customerDetails?.name}</h4>
-                    <p className="text-sm text-muted-foreground">{customerDetails?.company}</p>
-                    <div className="flex gap-2 mt-3">
-                      <Button size="sm" variant="outline" className="gap-1">
-                        <MessageSquare className="h-3 w-3" />
-                        <span>Chat</span>
-                      </Button>
-                      <Button size="sm" className="gap-1">
-                        <PhoneCall className="h-3 w-3" />
-                        <span>Call</span>
-                      </Button>
+                <h3 className="text-lg font-semibold mb-4">Call Settings</h3>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Mic className="h-4 w-4" />
+                      <span className="text-sm">Microphone</span>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      Mute
+                    </Button>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Volume2 className="h-4 w-4" />
+                      <span className="text-sm">Speaker Volume</span>
+                    </div>
+                    <div className="w-32">
+                      <Slider defaultValue={[80]} max={100} step={1} />
                     </div>
                   </div>
                   
-                  <div className="space-y-3 pt-3 border-t border-border/20">
-                    <div>
-                      <p className="text-xs text-muted-foreground">Last Contact</p>
-                      <p className="text-sm">{customerDetails?.lastContact}</p>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Download className="h-4 w-4" />
+                      <span className="text-sm">Record Call</span>
                     </div>
-                    
-                    <div>
-                      <p className="text-xs text-muted-foreground">Status</p>
-                      <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${
-                        customerDetails?.status === 'Active' ? 'bg-green-900/20 text-green-400' : 
-                        customerDetails?.status === 'Pending' ? 'bg-yellow-900/20 text-yellow-400' : 
-                        'bg-gray-900/20 text-gray-400'
-                      }`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${
-                          customerDetails?.status === 'Active' ? 'bg-green-400' : 
-                          customerDetails?.status === 'Pending' ? 'bg-yellow-400' : 'bg-gray-400'
-                        }`}></span>
-                        {customerDetails?.status}
-                      </div>
+                    <Switch />
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Layers className="h-4 w-4" />
+                      <span className="text-sm">Background Noise</span>
                     </div>
-                    
-                    <div>
-                      <p className="text-xs text-muted-foreground">Notes</p>
-                      <ul className="text-sm space-y-1">
-                        <li className="flex items-start gap-1">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary/60 mt-1.5"></span>
-                          <span>Interested in premium plan</span>
-                        </li>
-                        <li className="flex items-start gap-1">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary/60 mt-1.5"></span>
-                          <span>Needs integration with Shopify</span>
-                        </li>
-                      </ul>
-                    </div>
+                    <select className="bg-background border border-border rounded p-1 text-xs">
+                      <option>Suppress Low</option>
+                      <option>Suppress Medium</option>
+                      <option>Suppress High</option>
+                    </select>
                   </div>
                 </div>
               </DashboardCard>
             )}
             
-            <DashboardCard className="bg-card/50 border-none">
-              <h3 className="text-lg font-semibold mb-4">Voice Assistant</h3>
-              <div className="p-4 bg-background/50 rounded-lg flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
-                  <Mic className="h-5 w-5 text-accent" />
+            {selectedCustomer && (
+              <DashboardCard className="bg-card/50 border-none">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Customer Details</h3>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Edit className="h-4 w-4" />
+                  </Button>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm">Ask anything about your customers</p>
-                  <p className="text-xs text-muted-foreground">Search data, get insights, schedule calls...</p>
-                </div>
-              </div>
-            </DashboardCard>
+                
+                {customerDetails && (
+                  <div className="space-y-4">
+                    <div className="flex flex-col items-center">
+                      <img 
+                        src={customerDetails.photo}
+                        alt={customerDetails.name}
+                        className="h-16 w-16 rounded-full mb-2"
+                      />
+                      <h4 className="font-medium">{customerDetails.name}</h4>
+                      <p className="text-xs text-muted-foreground">{customerDetails.company}</p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="bg-background/50 p-2 rounded flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">Status</span>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${
+                          customerDetails.status === 'Active' ? 'bg-green-500/20 text-green-600' : 
+                          customerDetails.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-600' : 
+                          'bg-red-500/20 text-red-600'
+                        }`}>
+                          {customerDetails.status}
+                        </span>
+                      </div>
+                      
+                      <div className="bg-background/50 p-2 rounded flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">Last Contact</span>
+                        <span className="text-xs">{customerDetails.lastContact}</span>
+                      </div>
+                      
+                      <div className="bg-background/50 p-2 rounded flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">Account Value</span>
+                        <span className="text-xs">$12,450.00</span>
+                      </div>
+                      
+                      <div className="bg-background/50 p-2 rounded flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">Satisfaction</span>
+                        <div className="flex items-center">
+                          <span className="text-xs mr-1">85%</span>
+                          <Progress value={85} className="h-1.5 w-16" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Notes</h5>
+                      <div className="bg-background/50 p-2 rounded text-xs h-20 overflow-y-auto">
+                        Last call: Customer expressed interest in our premium plan. Send follow-up with pricing details and scheduler for product demo.
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </DashboardCard>
+            )}
           </div>
         </div>
       </div>
     </DashboardLayout>
   );
 };
+
 
 export default Calls;

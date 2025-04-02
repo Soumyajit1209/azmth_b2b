@@ -36,7 +36,7 @@ const mainNavItems: NavItem[] = [
   { name: 'Customers', icon: Users, path: '/customers' },
   { name: 'Chat', icon: MessageSquare, path: '/chat' },
   { name: 'Calendar', icon: Calendar, path: '/calendar' },
-  {name: 'Upload PDF', icon: Upload, path: '/upload-pdf'},
+  {name: 'Upload Document', icon: Upload, path: '/upload-doc'},
 ];
 
 const secondaryNavItems: NavItem[] = [
@@ -61,11 +61,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     >
       <div className="flex h-16 items-center gap-2 px-4 border-b border-sidebar-border">
         <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-lg">
-          S
+          a
         </div>
         {isOpen && ( // Conditionally render text when sidebar is open
           <div className="flex flex-col">
-            <span className="text-sm font-medium">SalesAI</span>
+            <span className="text-sm font-medium">azmth</span>
             <span className="text-xs text-sidebar-foreground/60">Sales Platform</span>
           </div>
         )}
