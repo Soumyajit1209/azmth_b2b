@@ -231,103 +231,61 @@ const Customers = () => {
             </DashboardCard>
           </div>
           
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 flex flex-col h-full">
             {selectedCustomer ? (
-              <>
-                <DashboardCard className="bg-card/50 border-none">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
-                    <img 
-                      src={customerDetails?.photo}
-                      alt={customerDetails?.name}
-                      className="h-16 w-16 rounded-full"
-                    />
-                    
-                    <div className="flex-1">
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                        <div>
-                          <h2 className="text-xl font-bold">{customerDetails?.name}</h2>
-                          <p className="text-muted-foreground">{customerDetails?.company}</p>
-                        </div>
-                        
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                          customerDetails?.status === 'Active' ? 'bg-green-900/20 text-green-400' : 
-                          customerDetails?.status === 'Pending' ? 'bg-yellow-900/20 text-yellow-400' : 
-                          'bg-gray-900/20 text-gray-400'
-                        }`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${
-                            customerDetails?.status === 'Active' ? 'bg-green-400' : 
-                            customerDetails?.status === 'Pending' ? 'bg-yellow-400' : 'bg-gray-400'
-                          }`}></span>
-                          {customerDetails?.status}
-                        </div>
+              <DashboardCard className="bg-card/50 border-none flex flex-col flex-1">
+                <div className="flex items-center gap-4 border-b pb-4 mb-4">
+                  <img 
+                    src={customerDetails?.photo}
+                    alt={customerDetails?.name}
+                    className="h-16 w-16 rounded-full"
+                  />
+                  <div>
+                    <h2 className="text-xl font-bold">{customerDetails?.name}</h2>
+                    <p className="text-muted-foreground">{customerDetails?.company}</p>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-background rounded-lg">
+                  {/* Chat Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <User className="h-4 w-4 text-primary" />
                       </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                        <div className="flex items-center gap-2">
-                          <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{customerDetails?.email}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{customerDetails?.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">Last contact: {customerDetails?.lastContact}</span>
-                        </div>
+                      <div className="bg-muted/30 p-3 rounded-lg rounded-tl-none shadow-sm">
+                        <p className="text-sm">Hi {customerDetails?.name}, how can I assist you today?</p>
                       </div>
                     </div>
-                    
-                    <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              size="icon" 
-                              onClick={prepareEditCustomer}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Edit Customer</TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant="destructive" 
-                              size="icon"
-                              onClick={handleDeleteCustomer}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Delete Customer</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                    <div className="flex items-start gap-3">
+                      <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
+                        <Bot className="h-4 w-4 text-accent" />
+                      </div>
+                      <div className="bg-accent/20 p-3 rounded-lg rounded-tl-none shadow-sm">
+                        <p className="text-sm">This is a dummy text... working on this feature!!!</p>
+                      </div>
                     </div>
                   </div>
-                </DashboardCard>
-
-                {/* Rest of the existing customer details tabs */}
-                <Tabs defaultValue="overview" className="w-full">
-                  {/* Your existing tabs content remains the same */}
-                </Tabs>
-              </>
+                </div>
+                <div className="p-4 border-t bg-background">
+                  <form className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Type a message..."
+                      className="flex-1 h-10 px-4 rounded-lg border border-input bg-background text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                    />
+                    <Button type="submit" className="h-10 px-4 bg-primary text-white rounded-lg hover:bg-primary/90">
+                      Send
+                    </Button>
+                  </form>
+                </div>
+              </DashboardCard>
             ) : (
-              <DashboardCard className="bg-card/50 border-none h-[400px] flex flex-col items-center justify-center">
+              <DashboardCard className="bg-card/50 border-none flex flex-col flex-1 items-center justify-center">
                 <Users className="h-16 w-16 text-muted-foreground/30 mb-4" />
                 <h3 className="text-xl font-semibold mb-1">No Customer Selected</h3>
                 <p className="text-muted-foreground text-center max-w-md mb-6">
-                  Select a customer from the list or use the search functionality to find a specific customer
+                  Click on the user to view chat.
                 </p>
-                <Button 
-                  className="gap-2"
-                  onClick={() => setIsAddCustomerDialogOpen(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                  Add New Customer
-                </Button>
               </DashboardCard>
             )}
           </div>

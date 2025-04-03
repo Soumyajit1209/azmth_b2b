@@ -34,7 +34,6 @@ const mainNavItems: NavItem[] = [
   { name: 'Voice & Video', icon: Mic, path: '/voice-clone' },
   { name: 'Calls', icon: Phone, path: '/calls' },
   { name: 'Customers', icon: Users, path: '/customers' },
-  { name: 'Chat', icon: MessageSquare, path: '/chat' },
   { name: 'Calendar', icon: Calendar, path: '/calendar' },
   {name: 'Upload Document', icon: Upload, path: '/upload-doc'},
 ];
