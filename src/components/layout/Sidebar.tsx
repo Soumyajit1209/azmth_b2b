@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { UserButton } from '@clerk/clerk-react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -126,13 +127,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           {isOpen && ( // Conditionally render footer content
             <>
               <div className="px-2">
-                <Search className="h-4 w-4 text-sidebar-foreground/60" />
-                <span className="ml-2 text-xs text-sidebar-foreground/60">Press Ctrl+K to search</span>
+                {/* Replace "Press Ctrl+K to search" with the search bar */}
+                <form className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="search"
+                    placeholder="Search..."
+                    className="h-10 w-full rounded-lg border border-input bg-background pl-10 pr-4 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </form>
               </div>
-              
-             
             </>
           )}
+          {/* Add UserButton at the bottom of the sidebar */}
+          <div className="flex items-center gap-2 p-4 border-t border-sidebar-border">
+            <UserButton />
+          </div>
         </div>
       </nav>
     </aside>

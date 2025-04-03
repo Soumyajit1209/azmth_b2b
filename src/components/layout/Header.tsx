@@ -39,25 +39,9 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) 
             Sales Individual Dashboard
           </h1>
         )}
-
-        <div className={`${isSearchOpen ? 'w-full md:w-96' : 'w-0 md:w-auto opacity-0 md:opacity-100'} transition-all duration-300 overflow-hidden`}>
-          <SearchInput onClose={() => setIsSearchOpen(false)} isExpanded={isSearchOpen} />
-        </div>
       </div>
 
       <div className="flex items-center gap-2">
-        {!isSearchOpen && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="md:hidden"
-            onClick={() => setIsSearchOpen(true)}
-          >
-            <Search size={20} />
-            <span className="sr-only">Search</span>
-          </Button>
-        )}
-
         <Button variant="ghost" size="icon" className="relative">
           <Bell size={20} />
           <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
@@ -67,8 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) 
           <span className="sr-only">Notifications</span>
         </Button>
 
-        {/* Replace default profile button with Clerk's UserButton */}
-        <UserButton />
+        {/* Removed the search bar */}
       </div>
     </header>
   );
