@@ -49,9 +49,6 @@ const App = () => (
             <Route path="/customers" element={<Customers />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/upload-doc" element={<DocumentUploadPage />} />
-            {/* ADD ALL CUSTOM ROUTES BELOW THE CATCH-ALL "*" ROUTE */}
-            {/* Example: <Route path="/example" element={<Example />} /> */}
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </SignedIn>
