@@ -31,6 +31,7 @@ import {
   UserPlus,
   Mail,
 } from "lucide-react"
+import { toast } from "sonner"; // Import toast from sonner
 
 export default function LandingPage() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
@@ -86,19 +87,14 @@ export default function LandingPage() {
   }, []) // Empty dependency array to ensure this only runs once
 
   // Function to handle dashboard button click
-  const handleDashboardClick = (e) => {
+  const handleDashboardClick = (e: React.MouseEvent) => {
     if (!isSignedIn) {
-      e.preventDefault()
-      // If not signed in, open Clerk sign-in modal
-      const signInButton = document.querySelector("[data-clerk-sign-in]")
-      if (signInButton) {
-        (signInButton as HTMLElement).click()
-      }
+      e.preventDefault();
+      toast.error("Please sign in first to access the dashboard."); // Show error message
     } else {
-      // If signed in, navigate to dashboard
-      navigate("/dashboard")
+      navigate("/dashboard");
     }
-  }
+  };
 
   const features = [
     {
@@ -297,7 +293,9 @@ export default function LandingPage() {
           >
             {/* Replace "Get a Demo" with "Dashboard" */}
             <SpotlightButton 
-              className="bg-white text-black hover:bg-gray-200 relative overflow-hidden group"
+              className={`bg-white text-black hover:bg-gray-200 relative overflow-hidden group ${
+                !isSignedIn ? "cursor-not-allowed" : ""
+              }`}
               onClick={handleDashboardClick}
             >
               <span className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
