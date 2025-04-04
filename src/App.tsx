@@ -1,8 +1,9 @@
 import { Toaster } from "@/components/ui/toaster";
+
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route , Navigate } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 // Pages
@@ -20,40 +21,79 @@ import { Button } from "./components/ui/button";
 // Create a client
 const queryClient = new QueryClient();
 
+const ProtectedRoute = ({ children }) => {
+  return (
+    <>
+      <SignedIn>{children}</SignedIn>
+      <SignedOut>
+        <Navigate to="/" replace />
+      </SignedOut>
+    </>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SignedOut>
-          {/* Render Clerk's SignIn/SignUp form */}
-          <div className="flex items-center justify-center h-screen">
-            <SignInButton mode="modal">
-              <Button>Sign In / Sign Up</Button>
-            </SignInButton>
-          </div>
-        </SignedOut>
-        <SignedIn>
-          <header>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-            </SignedIn>
-          </header>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/dashboard" element={<Index />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/voice-clone" element={<VoiceClone />} />
-            <Route path="/calls" element={<Calls />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/upload-doc" element={<DocumentUploadPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </SignedIn>
+        
+      <Routes>
+      
+      <Route path="/" element={<LandingPage />} />
+      
+     
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Index />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/analytics" element={
+        <ProtectedRoute>
+          <Analytics />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/voice-clone" element={
+        <ProtectedRoute>
+          <VoiceClone />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/calls" element={
+        <ProtectedRoute>
+          <Calls />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/customers" element={
+        <ProtectedRoute>
+          <Customers />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/calendar" element={
+        <ProtectedRoute>
+          <Calendar />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/upload-doc" element={
+        <ProtectedRoute>
+          <DocumentUploadPage />
+        </ProtectedRoute>
+      } />
+      
+  
+      <Route path="*" element={
+        <ProtectedRoute>
+          <NotFound />
+        </ProtectedRoute>
+      } />
+    </Routes>
+        
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

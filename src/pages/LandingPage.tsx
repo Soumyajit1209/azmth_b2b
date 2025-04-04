@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Link } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { SparklesCore } from "@/components/ui/sparkles"
 import { BackgroundBeams } from "@/components/ui/background-beams"
@@ -15,6 +15,7 @@ import { WavyBackground } from "@/components/ui/wavy-background"
 import { HoverEffect } from "@/components/ui/card-hover-effect"
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import { TracingBeam } from "@/components/ui/tracing-beam"
+import { SignInButton, useUser, SignedIn, SignedOut } from "@clerk/clerk-react"
 import {
   ChevronRight,
   BarChart3,
@@ -36,6 +37,8 @@ export default function LandingPage() {
   const { scrollYProgress } = useScroll()
   const containerRef = useRef<HTMLDivElement>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const navigate = useNavigate()
+  const { isSignedIn, user } = useUser()
 
   // Parallax effect values
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -100])
@@ -81,6 +84,21 @@ export default function LandingPage() {
       if (timeoutId) clearTimeout(timeoutId)
     }
   }, []) // Empty dependency array to ensure this only runs once
+
+  // Function to handle dashboard button click
+  const handleDashboardClick = (e) => {
+    if (!isSignedIn) {
+      e.preventDefault()
+      // If not signed in, open Clerk sign-in modal
+      const signInButton = document.querySelector("[data-clerk-sign-in]")
+      if (signInButton) {
+        (signInButton as HTMLElement).click()
+      }
+    } else {
+      // If signed in, navigate to dashboard
+      navigate("/dashboard")
+    }
+  }
 
   const features = [
     {
@@ -185,16 +203,23 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white overflow-hidden" ref={containerRef}>
-      {/* Add Sign Up button to the top-right */}
-      <div className="absolute top-4 right-4 z-20">
-        <Button variant="outline" className="border-gray-700 hover:bg-gray-900 relative overflow-hidden group">
-          <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-          <Link to="/signup" className="flex items-center relative z-10">
-            Sign up <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-          <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-        </Button>
-      </div>
+      {/* Sign In button - only shows when user is NOT signed in */}
+      <SignedOut>
+        <div className="absolute top-4 right-4 z-20">
+          <SignInButton mode="modal">
+            <Button 
+              variant="outline" 
+              className="border-gray-700 hover:bg-gray-900 relative overflow-hidden group"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
+              <span className="flex items-center relative z-10">
+                Sign in<ArrowRight className="ml-2 h-4 w-4" />
+              </span>
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            </Button>
+          </SignInButton>
+        </div>
+      </SignedOut>
 
       <FloatingNav navItems={navItems} />
 
@@ -260,11 +285,14 @@ export default function LandingPage() {
             transition={{ delay: 1, duration: 0.8 }}
           >
             {/* Replace "Get a Demo" with "Dashboard" */}
-            <SpotlightButton className="bg-white text-black hover:bg-gray-200 relative overflow-hidden group">
+            <SpotlightButton 
+              className="bg-white text-black hover:bg-gray-200 relative overflow-hidden group"
+              onClick={handleDashboardClick}
+            >
               <span className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-              <Link to="/dashboard" className="flex items-center relative z-10">
+              <span className="flex items-center relative z-10">
                 Dashboard <ChevronRight className="ml-2 h-4 w-4" />
-              </Link>
+              </span>
               <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </SpotlightButton>
           </motion.div>
@@ -551,4 +579,15 @@ export default function LandingPage() {
     </div>
   )
 }
+
+// export const ProtectedDashboardRoute = ({ children }) => {
+//     return (
+//       <>
+//         <SignedIn>{children}</SignedIn>
+//         <SignedOut>
+//           <Navigate to="/" replace />
+//         </SignedOut>
+//       </>
+//     );
+//   };
 
