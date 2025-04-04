@@ -237,7 +237,7 @@ export default function LandingPage() {
               particleColor="#FFFFFF"
             />
             <motion.h1
-              className="absolute inset-0 flex items-center justify-center text-5xl md:text-7xl font-bold tracking-tighter"
+              className="absolute inset-0 flex items-center justify-center text-5xl md:text-7xl font-bold tracking-tighter pt-56"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
@@ -246,7 +246,7 @@ export default function LandingPage() {
             </motion.h1>
           </motion.div>
 
-          <div className="max-w-3xl mx-auto mt-8">
+          <div className="max-w-3xl mx-auto mt-8 pt-32">
             <TextGenerateEffect
               words="Transform your customer relationships with our intelligent CRM platform. Designed for modern businesses."
               className="text-xl md:text-2xl text-gray-300 mb-8"
@@ -369,7 +369,7 @@ export default function LandingPage() {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Advanced Capabilities</h2>
             <p className="text-gray-400 max-w-2xl mx-auto">
-              Discover what makes Gemini CRM the preferred choice for growing businesses
+              Discover what makes Azmth CRM the preferred choice for growing businesses
             </p>
           </motion.div>
 
@@ -410,7 +410,7 @@ export default function LandingPage() {
 
                 <div className="relative z-10">
                   <p className="text-xl italic text-gray-300 mb-6">
-                    "Gemini CRM has transformed how we manage our client relationships. The intuitive interface and
+                    "Azmth CRM has transformed how we manage our client relationships. The intuitive interface and
                     powerful analytics have helped us increase our customer retention by 35%."
                   </p>
                   <div>
@@ -436,7 +436,7 @@ export default function LandingPage() {
 
                 <div className="relative z-10">
                   <p className="text-xl italic text-gray-300 mb-6">
-                    "The automation features in Gemini CRM have saved our team countless hours. We've been able to focus
+                    "The automation features in Azmth CRM have saved our team countless hours. We've been able to focus
                     more on strategy and less on data entry."
                   </p>
                   <div>
@@ -465,7 +465,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our Team</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">The brilliant minds behind Gemini CRM</p>
+            <p className="text-gray-400 max-w-2xl mx-auto">The brilliant minds behind Azmth CRM</p>
           </motion.div>
 
           <div className="flex flex-wrap justify-center gap-10">
@@ -496,7 +496,7 @@ export default function LandingPage() {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Customer Relationships?</h2>
             <p className="text-gray-400 mb-8">
-              Join thousands of businesses already using Gemini CRM to grow their customer base and increase revenue.
+              Join thousands of businesses already using Azmth CRM to grow their customer base and increase revenue.
             </p>
 
             <motion.div
@@ -523,7 +523,7 @@ export default function LandingPage() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
-              <h3 className="text-xl font-bold">Gemini CRM</h3>
+              <h3 className="text-xl font-bold">Azmth CRM</h3>
               <p className="text-gray-400 mt-2">© {new Date().getFullYear()} All rights reserved.</p>
             </div>
 
