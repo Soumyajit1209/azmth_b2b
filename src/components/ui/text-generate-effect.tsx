@@ -18,7 +18,7 @@ export const TextGenerateEffect = ({ words, className }: TextGenerateEffectProps
       const timeout = setTimeout(() => {
         setDisplayedText(words.substring(0, currentIndex + 1))
         setCurrentIndex((prevIndex) => prevIndex + 1)
-      }, 30) // Adjust speed as needed
+      }, 5) // Adjust speed as needed
 
       return () => clearTimeout(timeout)
     } else {

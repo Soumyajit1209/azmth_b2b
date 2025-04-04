@@ -185,6 +185,17 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white overflow-hidden" ref={containerRef}>
+      {/* Add Sign Up button to the top-right */}
+      <div className="absolute top-4 right-4 z-20">
+        <Button variant="outline" className="border-gray-700 hover:bg-gray-900 relative overflow-hidden group">
+          <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
+          <Link to="/signup" className="flex items-center relative z-10">
+            Sign up <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+          <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+        </Button>
+      </div>
+
       <FloatingNav navItems={navItems} />
 
       {/* Hero Section with Spotlight */}
@@ -248,21 +259,14 @@ export default function LandingPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
           >
+            {/* Replace "Get a Demo" with "Dashboard" */}
             <SpotlightButton className="bg-white text-black hover:bg-gray-200 relative overflow-hidden group">
               <span className="absolute inset-0 bg-gradient-to-r from-gray-200 to-white opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-              <Link to="/demo" className="flex items-center relative z-10">
-                Get a Demo <ChevronRight className="ml-2 h-4 w-4" />
+              <Link to="/dashboard" className="flex items-center relative z-10">
+                Dashboard <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
               <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-400 to-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </SpotlightButton>
-
-            <Button variant="outline" className="border-gray-700 hover:bg-gray-900 relative overflow-hidden group">
-              <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-              <Link to="https://clerk.com/sign-in" className="flex items-center relative z-10">
-                Sign In <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-            </Button>
           </motion.div>
         </motion.div>
 
