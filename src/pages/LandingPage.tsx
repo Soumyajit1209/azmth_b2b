@@ -15,7 +15,7 @@ import { WavyBackground } from "@/components/ui/wavy-background"
 import { HoverEffect } from "@/components/ui/card-hover-effect"
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import { TracingBeam } from "@/components/ui/tracing-beam"
-import { SignInButton, useUser, SignedIn, SignedOut } from "@clerk/clerk-react"
+import { SignInButton, useUser, SignedIn, SignedOut , UserButton } from "@clerk/clerk-react"
 import {
   ChevronRight,
   BarChart3,
@@ -203,25 +203,36 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-white overflow-hidden" ref={containerRef}>
-      {/* Sign In button - only shows when user is NOT signed in */}
+    {/* Authentication UI - show different elements based on sign-in status */}
+    <div className="absolute top-4 right-4 z-20">
+      {/* User Button - only shows when user IS signed in */}
+      <SignedIn>
+        <UserButton 
+          afterSignOutUrl="/"
+          appearance={{
+            elements: {
+              userButtonAvatarBox: "h-10 w-10 border-2 border-gray-700 hover:border-white transition-colors duration-200"
+            }
+          }}
+        />
+      </SignedIn>
       <SignedOut>
-        <div className="absolute top-4 right-4 z-20">
-          <SignInButton mode="modal">
-            <Button 
-              variant="outline" 
-              className="border-gray-700 hover:bg-gray-900 relative overflow-hidden group"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-              <span className="flex items-center relative z-10">
-                Sign in<ArrowRight className="ml-2 h-4 w-4" />
-              </span>
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-            </Button>
-          </SignInButton>
-        </div>
+        <SignInButton mode="modal">
+          <Button 
+            variant="outline" 
+            className="border-gray-700 hover:bg-gray-900 relative overflow-hidden group"
+          >
+            <span className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
+            <span className="flex items-center relative z-10">
+              Sign in<ArrowRight className="ml-2 h-4 w-4" />
+            </span>
+            <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-gray-600 to-gray-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+          </Button>
+        </SignInButton>
       </SignedOut>
+    </div>
 
-      <FloatingNav navItems={navItems} />
+    <FloatingNav navItems={navItems} />
 
       {/* Hero Section with Spotlight */}
       <section id="home" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
