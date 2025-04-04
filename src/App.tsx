@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 // Pages
+import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import Analytics from "./pages/Analytics";
 import VoiceClone from "./pages/VoiceClone";
@@ -42,7 +43,8 @@ const App = () => (
             </SignedIn>
           </header>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard" element={<Index />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/voice-clone" element={<VoiceClone />} />
             <Route path="/calls" element={<Calls />} />
