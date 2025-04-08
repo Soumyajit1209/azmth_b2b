@@ -28,7 +28,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { CallDialer } from "@/components/call-dialer"
 import { CallInterface } from "@/components/call-interface"
 import { callApi } from "@/lib/call-api"
-import CampaignManagement from "@/components/CampaignManagement"
+import  CampaignManagement  from "@/components/CampaignManagement"
 
 const Calls = () => {
   const [isCallActive, setIsCallActive] = useState(false)
