@@ -19,6 +19,7 @@ import {
   Edit,
   Download,
   Layers,
+  FileSpreadsheet,
 } from "lucide-react"
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber"
 import { Slider } from "@/components/ui/slider"
@@ -27,6 +28,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { CallDialer } from "@/components/call-dialer"
 import { CallInterface } from "@/components/call-interface"
 import { callApi } from "@/lib/call-api"
+import CampaignManagement from "@/components/CampaignManagement"
 
 const Calls = () => {
   const [isCallActive, setIsCallActive] = useState(false)
@@ -39,6 +41,7 @@ const Calls = () => {
   const [isConnecting, setIsConnecting] = useState(false)
   const [callType, setCallType] = useState<"outgoing" | "incoming" | null>(null)
   const [isDialerOpen, setIsDialerOpen] = useState(false)
+  const [showCampaignManager, setShowCampaignManager] = useState(false)
 
   const toggleCall = async (targetNumber = "", fromNumber = "") => {
     if (!isCallActive) {
@@ -79,6 +82,8 @@ const Calls = () => {
       endCall()
     }
   }
+
+  
 
   const endCall = async () => {
     try {
@@ -198,12 +203,27 @@ const Calls = () => {
 
   const customerDetails = customers.find((c) => c.id === selectedCustomer)
 
+  if (showCampaignManager) {
+    return <CampaignManagement onBack={() => setShowCampaignManager(false)} />
+  }
+
   return (
     <DashboardLayout>
-      <div className="space-y-6 py-4">
-        <div className="space-y-0.5">
-          <h1 className="text-3xl font-bold tracking-tight">Call Management</h1>
-          <p className="text-muted-foreground">Manage your calls and switch between human and AI modes seamlessly</p>
+       <div className="space-y-6 py-4">
+        <div className="flex justify-between items-center">
+          <div className="space-y-0.5">
+            <h1 className="text-3xl font-bold tracking-tight">Call Management</h1>
+            <p className="text-muted-foreground">Manage your calls and switch between human and AI modes seamlessly</p>
+          </div>
+          
+          {/* New Campaign Button */}
+          <Button 
+            onClick={() => setShowCampaignManager(true)}
+            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-primary/20 transition-all duration-300 gap-2"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            Start Campaign
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
