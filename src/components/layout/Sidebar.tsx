@@ -30,7 +30,7 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { name: 'Dashboard', icon: Home, path: '/' },
+  { name: 'Dashboard', icon: Home, path: '/dashboard' },
   { name: 'Analytics', icon: BarChart, path: '/analytics' },
   { name: 'Voice & Video', icon: Mic, path: '/voice-clone' },
   { name: 'Calls', icon: Phone, path: '/calls' },
